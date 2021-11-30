@@ -3,7 +3,7 @@ import pygame
 
 class App:
     def __init__(self):
-        self.size = w, h = 800, 600
+        self.size = 800, 600
         self.screen = pygame.display.set_mode(self.size)
         self.player = Player()
         self.joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
@@ -13,7 +13,6 @@ class App:
     def main(self):
         running = True
         fps = 60
-        speed = 2
         clock = pygame.time.Clock()
         while running:
             clock.tick(fps)
