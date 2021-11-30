@@ -6,8 +6,10 @@ class App:
         self.size = 800, 600
         self.screen = pygame.display.set_mode(self.size)
         self.player = Player()
+        self.blocks = []
         self.joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
         pygame.display.set_caption("Test")
+        self.draw_map()
         self.main()
 
     def main(self):
@@ -21,9 +23,10 @@ class App:
                     running = False
                 if event.type == pygame.JOYBUTTONUP:
                     self.player.change_colour(event.button)
-            self.screen.fill("black")
             keys = pygame.key.get_pressed()
             self.input_device(keys)
+            self.screen.fill("black")
+            [i.draw(self.screen) for i in self.blocks]
             self.player.draw(self.screen)
             pygame.display.flip()
 
@@ -42,8 +45,17 @@ class App:
             if keys[pygame.K_a]:
                 self.player.move(-1, 0)
                 is_key = True
-            if self.joysticks[0] and not is_key:
+            if keys[pygame.K_r]:
+                self.draw_map()
+            if self.joysticks and not is_key:
                 self.player.move(self.joysticks[0].get_axis(0), self.joysticks[0].get_axis(1))
+
+    def draw_map(self):
+        for x in range(self.size[0] // 50):
+            for y in range(self.size[1] // 50):
+                self.blocks.append(Ground(x, y))
+        for i in self.blocks:
+            i.draw(self.screen)
 
 
 class Player:
@@ -55,7 +67,7 @@ class Player:
         self.atk = 10
         self.prt = 10
         self.speed = 10
-        self.colour = "green"
+        self.colour = "blue"
 
     def draw(self, screen):
         if self.colour:
@@ -89,6 +101,20 @@ class Player:
 
     def destroy(self):
         print(self)
+
+
+class Ground:
+    def __init__(self, x, y):
+        self.size = 50
+        self.x = x * self.size
+        self.y = y * self.size
+        self.durability = 50
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, "green", (self.x, self.y, self.x + self.size, self.y + self.size))
+
+    def destroy(self):
+        self.durability = 0
 
 
 if __name__ == '__main__':
