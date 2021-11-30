@@ -22,20 +22,44 @@ class App:
                 if event.type == pygame.JOYBUTTONUP:
                     self.player.change_colour(event.button)
             self.screen.fill("black")
-            self.player.move(self.joysticks[0])
+            keys = pygame.key.get_pressed()
+            self.input_device(keys)
             self.player.draw(self.screen)
             pygame.display.flip()
+
+    def input_device(self, keys=None):
+        is_key = False
+        if keys:
+            if keys[pygame.K_w]:
+                self.player.move(0, -1)
+                is_key = True
+            if keys[pygame.K_s]:
+                self.player.move(0, 1)
+                is_key = True
+            if keys[pygame.K_d]:
+                self.player.move(1, 0)
+                is_key = True
+            if keys[pygame.K_a]:
+                self.player.move(-1, 0)
+                is_key = True
+            if self.joysticks[0] and not is_key:
+                self.player.move(self.joysticks[0].get_axis(0), self.joysticks[0].get_axis(1))
 
 
 class Player:
     def __init__(self):
         self.x = 100
         self.y = 100
+        self.hp = 100
+        self.mp = 100
+        self.atk = 10
+        self.prt = 10
         self.speed = 10
         self.colour = "green"
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.colour, (self.x, self.y), 10)
+        if self.colour:
+            pygame.draw.circle(screen, self.colour, (self.x, self.y), 10)
 
     def change_colour(self, ind):
         if ind == 2:
@@ -47,13 +71,24 @@ class Player:
         if ind == 0:
             self.colour = "green"
 
-    def move(self, joy: pygame.joystick):
-        x = joy.get_axis(0)
-        y = joy.get_axis(1)
+    def to_damage(self):
+        return self.atk
+
+    def get_damage(self, dmg):
+        if self.hp - dmg - self.prt <= 0:
+            self.hp = 0
+            self.destroy()
+        else:
+            self.hp -= dmg - self.prt
+
+    def move(self, x, y):
         if abs(x) > 0.15:
             self.x += x * self.speed
         if abs(y) > 0.15:
             self.y += y * self.speed
+
+    def destroy(self):
+        print(self)
 
 
 if __name__ == '__main__':
