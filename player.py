@@ -1,5 +1,7 @@
 import pygame
 
+import ground
+
 
 class Player:
     def __init__(self):
@@ -36,11 +38,24 @@ class Player:
         else:
             self.hp -= dmg - self.prt
 
-    def move(self, x, y):
+    def move(self, x, y, items):
+        items = [i for i in items if type(i) != ground.Ground]
         if abs(x) > 0.15:
-            self.x += x * self.speed
+            if not self.is_stuck(x, y, items):
+                self.x += int(x * self.speed)
         if abs(y) > 0.15:
-            self.y += y * self.speed
+            if not self.is_stuck(x, y, items):
+                self.y += int(y * self.speed)
+
+    def is_stuck(self, x, y, items):
+        new_x = int(self.x + x * self.speed)
+        new_y = int(self.y + y * self.speed)
+        for i in items:
+            if new_x in i.get_pos()[0] and int(self.y) in i.get_pos()[1]:
+                return True
+            if new_y in i.get_pos()[1] and int(self.x) in i.get_pos()[0]:
+                return True
+        return False
 
     def destroy(self):
         print(self)

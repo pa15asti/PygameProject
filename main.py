@@ -10,7 +10,7 @@ from items import *
 
 class App:
     def __init__(self):
-        self.size = 800, 600
+        self.size = 1280, 720
         self.screen = pygame.display.set_mode(self.size)
         self.player = Player()
         self.items = []
@@ -41,21 +41,21 @@ class App:
         is_key = False
         if keys:
             if keys[pygame.K_w]:
-                self.player.move(0, -1)
+                self.player.move(0, -1, self.items)
                 is_key = True
             if keys[pygame.K_s]:
-                self.player.move(0, 1)
+                self.player.move(0, 1, self.items)
                 is_key = True
             if keys[pygame.K_d]:
-                self.player.move(1, 0)
+                self.player.move(1, 0, self.items)
                 is_key = True
             if keys[pygame.K_a]:
-                self.player.move(-1, 0)
+                self.player.move(-1, 0, self.items)
                 is_key = True
             if keys[pygame.K_r]:
                 self.draw_map()
             if self.joysticks and not is_key:
-                self.player.move(self.joysticks[0].get_axis(0), self.joysticks[0].get_axis(1))
+                self.player.move(self.joysticks[0].get_axis(0), self.joysticks[0].get_axis(1), self.items)
 
     def draw_map(self):
         for x in range(self.size[0] // 50):

@@ -19,6 +19,8 @@ class Chest:
 class CommonChest(Chest):
     def __init__(self, x, y):
         super().__init__()
+        self.row = x
+        self.col = y
         self.x = x * self.size
         self.y = y * self.size
         self.texture = pygame.image.load('images/chest1.bmp')
@@ -30,6 +32,9 @@ class CommonChest(Chest):
             texture = self.texture1
         texture = pygame.transform.scale(texture, (self.size, self.size))
         screen.blit(texture, (self.x, self.y))
+
+    def get_pos(self):
+        return [range(self.x, self.x + self.size + 1), range(self.y, self.y + self.size + 1)]
 
 
 class ExquisiteChest(Chest):
