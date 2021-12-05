@@ -60,8 +60,10 @@ class App:
     def draw_map(self):
         for x in range(self.size[0] // 50):
             for y in range(self.size[1] // 50):
-                self.items.append(random.choice([Ground(x, y), Ground(x, y), Ground(x, y), Ground(x, y), Ground(x, y),
-                                                 Ground(x, y), Ground(x, y), Ground(x, y), CommonChest(x, y)]))
+                if random.random() > 0.05:
+                    self.items.append(Ground(x, y))
+                else:
+                    self.items.append(CommonChest(x, y))
         for i in self.items:
             i.draw(self.screen)
 
