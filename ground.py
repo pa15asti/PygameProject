@@ -18,3 +18,4 @@ class Ground:
 
     def destroy(self):
         self.durability = 0
+ 
